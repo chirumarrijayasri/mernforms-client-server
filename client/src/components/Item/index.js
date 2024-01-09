@@ -6,17 +6,16 @@ import { FaUserEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 const Item = (props) => {
-    const { id, firstName, lastName, profile, onEdit, onDelete } = props;
+    const { userDetails, onEdit, onDelete } = props;
+    const {_id, firstName, lastName, profile} = userDetails;
     
     return (
-       
-       
-            <li className="list-item-container">
-                <p className="full-name">{firstName} {lastName}</p>
-                <img src={profile} width="30px" height="30px" className="image" alt={`${firstName} ${lastName}`} />
-                <FaUserEdit className="icons" onClick={() => onEdit(id)}/> 
-                <MdDelete className="icons" onClick={() => onDelete(id)} />
-            </li>
+       <li className="list-item-container">
+            <p className="full-name">{firstName} {lastName}</p>
+            <img src={profile} width="30px" height="30px" className="image" alt={`${firstName} ${lastName}`} />
+            <FaUserEdit className="icons" onClick={() => onEdit(_id)}/> 
+            <MdDelete className="icons" onClick={() => onDelete(_id)} />
+        </li>
     )
     
 }

@@ -9,19 +9,20 @@ const ListItems = (props) => {
     return (
     <>
     <h3 className="available-users p-3">Available Users</h3>
-    {users.length === 0  ? <p className="no-user-para">No users are available</p> : (
+    {users.length === 0  ? (<p className="no-user-para">No users are available</p>) : (
     <ul>
-        {users.map((user) => (
-            <Item 
-            key={user._id}
-            id={user._id}
-            firstName={user.firstName}
-            lastName={user.lastName}
-            profile={user.profile}
-            onEdit={onEdit}
-            onDelete={handleDelete}
-           />
-        ))}
+        {users.map(user => {
+            console.log(user)
+            return(
+                <Item 
+                key={`${user._id}`}
+                // id={user._id}
+                userDetails = {user}
+                onEdit={onEdit}
+                onDelete={handleDelete}
+            />
+            )
+        })}
     </ul> )}
     
     </>

@@ -1,27 +1,27 @@
 import users from '../models/model.js'
 import mongoose from 'mongoose'
+
 export const readUser = async (req, res) => {
     try {
         const readUser =await users.find({})
-        res.json(readUser)
+        res.status(200).json(readUser);
     } catch(err) {
-        res.send(err);
+        res.status(500).json({ message: error.message });
     }
 }
 
-export const createUser = async(req,res) => {
-    const createUser = new users(req.body)
-    console.log("user created successfully")
+export const createUser = async (req, res) => {
     try {
-         await createUser.save()
-         const updatedUsers = await users.find({});
-        res.json(updatedUsers);
-    } catch(err) {
-        console.log()
-        res.send(err);
-    } 
-   
-}
+        const createUser = new users(req.body);
+        await createUser.save();
+
+        const updatedUsers = await users.find({});
+        res.status(201).json(updatedUsers); // 201 Created status for successful creation
+    } catch (err) {
+        console.error('Error creating user:', err);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 export const readPerticularUser = async(req, res) => {
     const getUser = await users.findById(req.params.id)

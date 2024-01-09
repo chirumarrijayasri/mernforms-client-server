@@ -19,6 +19,7 @@ const UserData = () => {
 
     const interestOptions = ["Sports", "Music", "Travel", "Technology"];
 
+    //Get Data
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -77,6 +78,7 @@ const UserData = () => {
         }));
     }
 
+    //Delete User
     const handleDelete = async (id) => {
         try {
             console.log('Deleting user with ID:', id);
@@ -93,6 +95,7 @@ const UserData = () => {
         }
     }
 
+    //Update User
     const handleUpdate = async () => {
         try {
             const url = `http://localhost:8989/users/${editingUserId}`;
@@ -141,17 +144,14 @@ const UserData = () => {
         setIsEditing(true);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    //Submit Form
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
         try {
             let url = 'http://localhost:8989/users';
             let method = 'POST';
 
-            // if (isEditing) {
-            //     url = `http://localhost:8989/users/${editingUserId}`;
-            //     method = 'PUT'; // or 'PATCH' depending on your backend
-            // }
 
             const requestBody = {
                 method,
@@ -165,13 +165,8 @@ const UserData = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                // if (isEditing) {
-                //     setUsers((prevUsers) =>
-                //         prevUsers.map((user) => (user._id === data._id ? data : user))
-                //     );
-                // } else {
-                        setUsers((prevUsers) => [...prevUsers, data]);
-                //}
+                setUsers((prevUsers) => [...prevUsers, data]);
+                
                 setFormData({
                     firstName: "",
                     lastName: "",
@@ -181,14 +176,13 @@ const UserData = () => {
                     bio: "",
                     interests: [],
                 });
-                setIsEditing(false);
-                setEditingUserId(null);
+               
 
                 console.log('User added/updated successfully');
              } 
-           // else {
-            //     console.error('Error adding/updating user:', response.statusText);
-            // }
+           else {
+                console.error('Error adding user:', response.statusText);
+            }
         } catch (error) {
             console.error('Error adding/updating user:', error.message);
         }
@@ -228,7 +222,7 @@ const UserData = () => {
                             type="number"
                             id="age"
                             name="age"
-                            min="10"
+                            min="1"
                             max="100"
                             className="input-field form-control"
                             value={formData?.age}
