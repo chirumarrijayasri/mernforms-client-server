@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
 
 const ListItems = (props) => {
-    console.log(props)
+    
     const {users, onEdit, handleDelete} = props
     return (
     <>
@@ -12,7 +12,7 @@ const ListItems = (props) => {
     {users.length === 0  ? (<p className="no-user-para">No users are available</p>) : (
     <ul>
         {users.map(user => {
-            console.log(user)
+            
             return(
                 <Item 
                 key={`${user._id}`}

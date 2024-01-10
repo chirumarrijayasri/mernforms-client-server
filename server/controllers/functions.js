@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 
 export const readUser = async (req, res) => {
     try {
-        const readUser =await users.find({})
+        const readUser = await users.find()
         res.status(200).json(readUser);
     } catch(err) {
         res.status(500).json({ message: error.message });

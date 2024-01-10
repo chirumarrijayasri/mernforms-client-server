@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+
 import ListItems from '../ListItems'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css'
@@ -20,23 +21,41 @@ const UserData = () => {
     const interestOptions = ["Sports", "Music", "Travel", "Technology"];
 
     //Get Data
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://localhost:8989/users');
-                if (response.ok) {
+    const fetchData = async () => {
+        try {
+            const response = await fetch('http://localhost:8989/users/fetchingData');
+            console.log(response)
+            // if (response.ok) {
+            //     const data = await response.json();
+            //     setUsers(data);
+            // } else {
+            //     console.error('Error fetching user data:', response.statusText);
+            // }
+
+            if (response.ok) {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
                     const data = await response.json();
+                    console.log("fetched data", data)
                     setUsers(data);
                 } else {
-                    console.error('Error fetching user data:', response.statusText);
+                    console.error('Error fetching user data: Response is not in JSON format');
                 }
-            } catch (error) {
-                console.error('Error fetching user data:', error.message);
+            } else {
+                console.error('Error fetching user data:', response.status, response.statusText);
             }
-        };
 
+        } catch (error) {
+            console.error('Error fetching user data:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        
         fetchData();
     }, [])
+
+   
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -66,8 +85,7 @@ const UserData = () => {
 
     const handleCheckboxChange = (e) => {
         const { value } = e.target;
-        console.log('Current formData:', formData);
-        console.log('Checkbox value:', value);
+
         const currentInterests = formData && formData.interests && Array.isArray(formData.interests) ? formData.interests : [];
         const updatedInterests = currentInterests.includes(value)
             ? currentInterests.filter((interest) => interest !== value)
@@ -113,6 +131,7 @@ const UserData = () => {
 
             if (response.ok) {
                 const updatedUser = await response.json();
+
                 setUsers((prevUsers) =>
                     prevUsers.map((user) => (user._id === updatedUser._id ? updatedUser : user))
                 );
@@ -155,18 +174,27 @@ const UserData = () => {
 
             const requestBody = {
                 method,
+                // mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             };
 
+            console.log("data------------", requestBody)
             const response = await fetch(url, requestBody);
+
 
             if (response.ok) {
                 const data = await response.json();
-                setUsers((prevUsers) => [...prevUsers, data]);
-                
+                console.log('form submission result', data);
+    
+                setUsers((prevUsers) => {
+                    const updatedUsers = [...prevUsers, data];
+                    console.log('Users after state update', updatedUsers);
+                    return updatedUsers;
+                });
+    
                 setFormData({
                     firstName: "",
                     lastName: "",
@@ -176,13 +204,12 @@ const UserData = () => {
                     bio: "",
                     interests: [],
                 });
-               
-
+                fetchData(); // Trigger fetchData after successful submission
                 console.log('User added/updated successfully');
-             } 
-           else {
-                console.error('Error adding user:', response.statusText);
+            } else {
+                console.error('Error adding/updating user:', response.status, response.statusText);
             }
+
         } catch (error) {
             console.error('Error adding/updating user:', error.message);
         }
